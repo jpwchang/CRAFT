@@ -4,7 +4,7 @@ from pathlib import Path
 # get the absolute path to the repository so we don't have to deal with relative paths
 repo_dir = Path(__file__).parent.parent.absolute()
 
-corpus_name = "cmv" # Name of the dataset to run CRAFT on. This is not directly used by the model, it is instead used by
+corpus_name = "wikiconv" # Name of the dataset to run CRAFT on. This is not directly used by the model, it is instead used by
                          # this config file to define certain input and output locations. You can, of course, override those
                          # location settings directly and thus completely ignore this setting, it is just useful to use this
                          # setting to keep everything consistent and organized :)
