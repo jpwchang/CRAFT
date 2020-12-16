@@ -26,4 +26,4 @@ python model/train_generative_model.py
 No command line arguments are needed or taken, as all configuration is read from config.py. As previously stated, you do not need to edit config.py if you simply want to run the standard demo, as all configuration settings have been set to correctly read the input files bundled in this repository and output to a new subdirectory at the top level of the repo directory.
 
 ### Fine-tuning and inference
-TODO
+Once the encoder layers have been fitted via pre-training, they can be used as the basis of a classifier model that does the actual forecasting. The process of training such a classifier using the pre-trained starting point is known as fine-tuning. Since fine-tuning uses much smaller amounts of labeled data, it runs much more quickly, so it is presented as an interactive notebook: `fine_tuning_demo.ipynb`
