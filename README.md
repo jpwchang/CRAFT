@@ -9,7 +9,7 @@ The two core requirements are PyTorch (which CRAFT is implemented in) and ConvoK
   - ConvoKit: `pip install convokit`
 
 Additionally, NLTK is used for text preprocessing, and Pandas + Matplotlib are used for visualization (in the demo notebook). Install these additional dependencies in one line:
-  - `pip install nltk pandas matplotlib`
+  - `conda install nltk pandas matplotlib`
 
 ## Configuration
 Variables for configuring both file I/O (namely input and output file locations) and CRAFT network parameters are all consolidated under model/config.py. Please consult the comments in that file for descriptions of the available settings and what they do. Note that the code can be run "as-is" without editing any of the settings, if you want to use the same parameters and data from the CRAFT paper. So, you only need to edit settings.py if (a) you want to customize file paths, or (b) you want to experiment with different network parameters.
