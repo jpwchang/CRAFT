@@ -124,15 +124,12 @@ def loadPairs(voc, path, last_only=False):
     return pairs
 
 # Using the functions defined above, return a list of pairs for unlabeled training
-def loadUnlabeledData(voc, train_path, val_path):
+def loadUnlabeledData(voc, train_path):
     print("Start preparing training data ...")
     print("Preprocessing training corpus...")
     train_pairs = loadPairs(voc, train_path)
     print("Loaded {} pairs".format(len(train_pairs)))
-    print("Preprocessing validation corpus...")
-    val_pairs = loadPairs(voc, val_path)
-    print("Loaded {} pairs".format(len(val_pairs)))
-    return train_pairs, val_pairs
+    return train_pairs
 
 # Using the functions defined above, return a list of pairs for labeled training
 def loadLabeledData(voc, attack_train_path, attack_val_path, analysis_path):

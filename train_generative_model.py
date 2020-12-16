@@ -6,9 +6,9 @@ import torch.nn.functional as F
 import random
 import os
 
-from .config import *
-from .data import *
-from .model import *
+from model.config import *
+from model.data import *
+from model.model import *
 
 def maskNLLLoss(inp, target, mask):
     nTotal = mask.sum()
@@ -105,7 +105,7 @@ def train(input_variable, dialog_lengths, dialog_lengths_list, utt_lengths, batc
 def trainIters(voc, pairs, encoder, context_encoder, decoder,
                encoder_optimizer, context_encoder_optimizer, decoder_optimizer, embedding, 
                encoder_n_layers, context_encoder_n_layers, decoder_n_layers, 
-               save_dir, n_iteration, batch_size, print_every, clip, corpus_name, loadFilename):
+               save_dir, n_iteration, batch_size, print_every, clip, corpus_name):
     
     # create a batch iterator for training data
     batch_iterator = batchIterator(voc, pairs, batch_size)
@@ -149,50 +149,24 @@ if __name__ == "__main__":
     # Load vocabulary
     voc = loadPrecomputedVoc(corpus_name, word2index_path, index2word_path)
     # Load unlabeled training data
-    train_pairs, val_pairs = loadUnlabeledData(voc, train_path, val_path)
-
-    # Set checkpoint to load from; set to None if starting from scratch
-    loadFilename = None
-    #loadFilename = os.path.join(save_dir, generative_model_name, corpus_name, '{}-{}-{}_{}_{}_{}'.format(encoder_n_layers, context_encoder_n_layers, decoder_n_layers, CONTEXT_SIZE, MAX_LENGTH, hidden_size), "epoch2.tar")
-
-    # Load model if a loadFilename is provided
-    if loadFilename:
-        # If loading on same machine the model was trained on
-        checkpoint = torch.load(loadFilename)
-        # If loading a model trained on GPU to CPU
-        #checkpoint = torch.load(loadFilename, map_location=torch.device('cpu'))
-        encoder_sd = checkpoint['en']
-        context_sd = checkpoint['ctx']
-        decoder_sd = checkpoint['de']
-        encoder_optimizer_sd = checkpoint['en_opt']
-        context_optimizer_sd = checkpoint['ctx_opt']
-        decoder_optimizer_sd = checkpoint['de_opt']
-        embedding_sd = checkpoint['embedding']
-        voc.__dict__ = checkpoint['voc_dict']
-
+    train_pairs = loadUnlabeledData(voc, train_path)
 
     print('Building encoders and decoder ...')
     # Initialize word embeddings
     embedding = nn.Embedding(voc.num_words, hidden_size)
-    if loadFilename:
-        embedding.load_state_dict(embedding_sd)
     # Initialize encoder & decoder models
     encoder = EncoderRNN(hidden_size, embedding, encoder_n_layers, dropout)
     context_encoder = ContextEncoderRNN(hidden_size, context_encoder_n_layers, dropout)
     decoder = LuongAttnDecoderRNN(attn_model, embedding, hidden_size, voc.num_words, decoder_n_layers, dropout)
-    if loadFilename:
-        print("Restoring saved parameters...")
-        encoder.load_state_dict(encoder_sd)
-        context_encoder.load_state_dict(context_sd)
-        decoder.load_state_dict(decoder_sd)
     # Use appropriate device
     encoder = encoder.to(device)
     context_encoder = context_encoder.to(device)
     decoder = decoder.to(device)
     print('Models built and ready to go!')
 
-    # Find out how many iterations we will need to get through one full epoch of training
-    n_iteration = len(train_pairs) // batch_size
+    # Compute the number of training iterations we will need in order to achieve the number of epochs specified in the settings at the start of the notebook
+    n_iter_per_epoch = len(train_pairs) // batch_size + int(len(train_pairs) % batch_size == 1)
+    n_iteration = n_iter_per_epoch * pretrain_epochs
 
     # Ensure dropout layers are in train mode
     encoder.train()
@@ -204,10 +178,6 @@ if __name__ == "__main__":
     encoder_optimizer = optim.Adam(encoder.parameters(), lr=learning_rate)
     context_encoder_optimizer = optim.Adam(context_encoder.parameters(), lr=learning_rate)
     decoder_optimizer = optim.Adam(decoder.parameters(), lr=learning_rate * decoder_learning_ratio)
-    if loadFilename:
-        encoder_optimizer.load_state_dict(encoder_optimizer_sd)
-        context_encoder_optimizer.load_state_dict(context_optimizer_sd)
-        decoder_optimizer.load_state_dict(decoder_optimizer_sd)
 
     # Run training iterations
     print("Starting Training!")
@@ -215,11 +185,11 @@ if __name__ == "__main__":
     trainIters(voc, train_pairs, encoder, context_encoder, decoder,
                encoder_optimizer, context_encoder_optimizer, decoder_optimizer, embedding, 
                encoder_n_layers, context_encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size,
-               print_every, clip, corpus_name, loadFilename)
+               print_every, clip, corpus_name)
 
     # Save the trained model
     print("Saving!")
-    directory = os.path.join(save_dir, generative_model_name, corpus_name, '{}-{}-{}_{}_{}_{}'.format(encoder_n_layers, context_encoder_n_layers, decoder_n_layers, CONTEXT_SIZE, MAX_LENGTH, hidden_size))
+    directory = os.path.join(save_dir, corpus_name)
     if not os.path.exists(directory):
         os.makedirs(directory)
     torch.save({
@@ -231,4 +201,4 @@ if __name__ == "__main__":
         'de_opt': decoder_optimizer.state_dict(),
         'voc_dict': voc.__dict__,
         'embedding': embedding.state_dict()
-    }, os.path.join(directory, "trained_model.tar"))
+    }, os.path.join(directory, "model.tar"))
