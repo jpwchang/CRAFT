@@ -49,11 +49,11 @@ You should ensure that your data is formatted as ConvoKit corpora.
 There are no special criteria for the unlabeled dataset, as pre-training only needs to see the text of the utterances, so any corpus should do.
 On the other hand, the labeled dataset corpus will need to have the following conversational metadata:
   - A metadata field 'split' which marks the conversation as belonging to the train, test, or validation set. This field should be a string with three possible values: 'train', 'test', or 'val'
-  - A metadata field to use as the label. This field can be named anything, but make sure to update `settings.py` accordingly (there is a setting for the name of the label metadata field). This field must be a boolean, where `True` means that the to-be-forecasted event happens in this conversation, and `False` means it does not.
+  - A metadata field to use as the label. This field can be named anything, but make sure to update `config.py` accordingly (there is a setting for the name of the label metadata field). This field must be a boolean, where `True` means that the to-be-forecasted event happens in this conversation, and `False` means it does not.
 
-### Update settings.py
+### Update config.py
 
-Choose a name for your corpus and update the `corpus_name` setting in `settings.py` (this will be used to determine file output locations).
+Choose a name for your corpus and update the `corpus_name` setting in `config.py` (this will be used to determine file output locations).
 Also remember to update the `label_metadata` setting with the name of the metadata field to use as the label during fine-tuning, as stated in the previous section.
 
 ### Process the unlabeled corpus
@@ -69,7 +69,7 @@ To construct this mapping from your unlabeled dataset, run the following:
 ```
 python build_vocabulary_objects.py
 ```
-No arguments are needed as all settings are read from `settings.py`
+No arguments are needed as all settings are read from `config.py`
 
 ### Run the demo!
 
