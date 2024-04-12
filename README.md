@@ -12,7 +12,7 @@ Additionally, NLTK is used for text preprocessing, and Pandas + Matplotlib are u
   - `conda install nltk pandas matplotlib`
 
 ## Configuration
-Variables for configuring both file I/O (namely input and output file locations) and CRAFT network parameters are all consolidated under model/config.py. Please consult the comments in that file for descriptions of the available settings and what they do. Note that the code can be run "as-is" without editing any of the settings, if you want to use the same parameters and data from the CRAFT paper. So, you only need to edit settings.py if (a) you want to customize file paths, or (b) you want to experiment with different network parameters.
+Variables for configuring both file I/O (namely input and output file locations) and CRAFT network parameters are all consolidated under model/config.py. Please consult the comments in that file for descriptions of the available settings and what they do. Note that the code can be run "as-is" without editing any of the settings, if you want to use the same parameters and data from the CRAFT paper. So, you only need to edit config.py if (a) you want to customize file paths, or (b) you want to experiment with different network parameters.
 
 ## Getting the demo data
 If you want to run the code "out-of-the-box" as a demo, you will first need to obtain the training data used in the paper, which is not included in this repository since it exceeds GitHub's file size limits. We have included a script to download the data, simply run:
