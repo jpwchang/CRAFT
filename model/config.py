@@ -17,6 +17,10 @@ corpus_name = "wikiconv" # Name of the dataset to run CRAFT on. This is not dire
 # corpus, then of course the if-statement is not needed and you can just directly put the name of the metadata
 # field in your corpus that you want to use as the label.
 label_metadata = "conversation_has_personal_attack" if corpus_name == "wikiconv" else "has_removed_comment"
+# Name of the utterance metadata field that contains comment-level toxicity labels, if any. Note
+# that CRAFT does not strictly need such labels, but some datasets like the wikiconv data do include
+# it. For custom datasets it is fine to leave this as None.
+utt_label_metadata = "comment_has_personal_attack" if corpus_name == "wikiconv" else None
 
 # define file locations
 save_dir = os.path.join(repo_dir, "saved_models", corpus_name) # Where to save the pre-trained model
@@ -44,7 +48,7 @@ learning_rate = 0.0001 # Learning rate to use during pre-training
 labeled_learning_rate = 1e-5 # Learning rate to use during fine-tuning
 decoder_learning_ratio = 5.0 # Learning rate multiplier on the decoder layers
 print_every = 10 # How often to print output to the screen (measured in training iterations)
-forecast_thresh = 0.570617 if corpus_name == "wikiconv" else 0.707984 # CRAFT score above which the forecast is considered positive. The default values were tuned on validation data for each corpus.
+forecast_thresh = 0.570617 if corpus_name == "wikiconv" else 0.548580 # CRAFT score above which the forecast is considered positive. The default values were tuned on validation data for each corpus.
 
 # Default word tokens
 PAD_token = 0  # Used for padding short sentences
