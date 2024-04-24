@@ -1,6 +1,13 @@
 # CRAFT
 This repository contains the authors' official public-facing implementation of the Conversational Recurrent Architecture for ForecasTing (CRAFT) neural model, as introduced in the EMNLP 2019 paper "Trouble on the Horizon: Forecasting the Derailment of Online Conversations as they Develop".
 
+## UPDATE April 2024
+For any users who have previously used this repo on the CGA-CMV dataset (`corpus_name="cmv"`), please be aware that we recently found a bug specifically
+affecting this code on that dataset, which caused its behavior to diverge from that of the code used in the original paper.
+The bug has been fixed as of the commit on April 24, 2024. Users who have previously used this code on CGA-CMV are encouraged to pull the latest changes
+and rerun their experiments, since results may change (the good news is, in expectation the results should change for the better!).
+The CGA-WIKI dataset (`corpus_name="wikiconv"`) is not affected by this issue and no action is needed there.
+
 ## Prerequisites
 CRAFT was originally written in Python 3.5 and PyTorch 0.9, but has been tested for reproducibility up to Python 3.8 and PyTorch 1.5.
 
